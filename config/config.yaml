@@ -1,0 +1,62 @@
+## path to tools ##
+bxTools:  /path/to/bxtools ## need to specify
+
+## paths to scripts ##
+molCov_script:  code/getMoleculeCoverage.R
+phaseCounts_hetSites_script:  code/getPhasedHETSitesFromLLRVCF.R
+phaseCounts_counts_script:  code/getTumourAlleleCountsAtHETSites.py
+TitanCNA_rscript: code/titanCNA_v1.15.0_TenX.R
+TitanCNA_selectSolutionRscript: code/selectSolution.R
+TitanCNA_combineTitanIchorCNA:  code/combineTITAN-ichor.R
+TitanCNA_libdir:  /path/to/TitahCNA ## optional
+ichorCNA_libdir:  /path/to/ichorCNA ## optional
+
+## reference settings ##
+genomeBuild: hg38
+genomeStyle:  UCSC
+snpVCF:  /path/to/hapmap_3.3.hg38.vcf.gz ## optional
+centromere:  data/GRCh38.GCA_000001405.2_centromere_acen.txt
+gender:  male
+
+## LongRanger params ##
+bamFileName:  phased_possorted_bam.bam
+phaseVariantFileName:  phased_variants.vcf.gz
+
+## params for each step ##
+
+## bxTools ##
+bx_mapQual:  60
+bx_bedFileRoot:  data/10kb_hg38/10kb_hg38
+
+## molecule coverage ##
+molCov_minReadsPerBX:  2
+molCov_chrs:  c(1:22, \"X\")
+molCov_gcWig: data/gc_hg38_10kb.wig
+molCov_mapWig:  data/map_hg38_10kb.wig
+molCov_maxCN:  8
+
+## get HET sites from LongRanger phased variant VCF ##
+het_minVCFQuality:  100
+het_minDepth:  10
+het_minVAF:  0.25
+
+## bam filters for tumor allelic counts ##
+het_minBaseQuality:  10
+het_minMapQuality:  20
+
+## TitanCNA params ##
+TitanCNA_numCores: 1
+TitanCNA_maxNumClonalClusters: 1
+TitanCNA_chrs:  c(1:22, \"X\")
+TitanCNA_normalInit:  0.5
+TitanCNA_maxPloidy:  3
+TitanCNA_haplotypeBinSize: 1e5
+TitanCNA_estimateNormal:  map
+TitanCNA_estimatePloidy:  TRUE
+TitanCNA_estimateClonality: TRUE
+TitanCNA_alphaK:  10000
+TitanCNA_alphaR:  5000
+TitanCNA_txnExpLen: 1e15
+TitanCNA_plotYlim:  c(-2,4)
+TitanCNA_solutionThreshold: 0.05
+

@@ -1,0 +1,6 @@
+samples:
+  tumor_sample_1:  /path/to/tumor/longranger/dir
+  normal_sample_1:  /path/to/normal/longranger/dir
+
+pairings:
+  tumor_sample_1:  normal_sample_1
