@@ -1,4 +1,5 @@
 ## path to tools ##
+samTools:  /path/to/samtools ## need to specify
 bxTools:  /path/to/bxtools ## need to specify
 
 ## paths to scripts ##
