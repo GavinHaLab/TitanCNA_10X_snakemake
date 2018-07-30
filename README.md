@@ -1,7 +1,14 @@
 # *Snakemake workflow for TITAN analysis of 10X Genomics WGS*
 
 ## Description
-This workflow will run the TITAN copy number analysis for set of tumour-normal pairs, starting from the BAM files aligned using [Long Ranger](https://support.10xgenomics.com/genome-exome/software/pipelines/latest/what-is-long-ranger) software. The analysis includes haplotype-based copy number prediction and post-processing of results. It will also perform model selection at the end of the workflow to choose the optimal ploidy and clonal cluster solutions.
+This workflow will run the TITAN copy number analysis for set of tumour-normal pairs, starting from the BAM files aligned using [Long Ranger](https://support.10xgenomics.com/genome-exome/software/pipelines/latest/what-is-long-ranger) software. The analysis includes haplotype-based copy number prediction and post-processing of results. It will also perform model selection at the end of the workflow to choose the optimal ploidy and clonal cluster solutions.  
+Viswanathan SR*, Ha G*, Hoff A*, et al. Structural Alterations Driving Castration-Resistant Prostate Cancer Revealed by Linked-Read Genome Sequencing. *Cell* 174, 433–447.e19 (2018).
+
+## Contact
+Gavin Ha  
+Fred Hutchinson Cancer Research Center  
+contact: <gavinha@gmail.com> or <gha@fredhutch.org>  
+Date: July 26, 2018  
 
 ## Requirements
 ### Software packages or libraries
