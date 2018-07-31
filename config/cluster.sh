@@ -3,7 +3,7 @@
 #$ -q broad
 #$ -cwd
 #$ -V
-#$ -l h_vmem=4G,h_rt=6:00:00
+#$ -l h_vmem=4G,h_rt=60:00:00
 #$ -pe smp 1
 #$ -binding linear:1
 #$ -o logs/cluster/

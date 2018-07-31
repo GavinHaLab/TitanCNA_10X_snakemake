@@ -9,13 +9,14 @@ phaseCounts_counts_script:  code/getTumourAlleleCountsAtHETSites.py
 TitanCNA_rscript: code/titanCNA_v1.15.0_TenX.R
 TitanCNA_selectSolutionRscript: code/selectSolution.R
 TitanCNA_combineTitanIchorCNA:  code/combineTITAN-ichor.R
-TitanCNA_libdir:  /path/to/TitahCNA ## optional
-ichorCNA_libdir:  /path/to/ichorCNA ## optional
+TitanCNA_libdir:  /path/to/TitahCNA/ ## optional
+ichorCNA_libdir:  /path/to/ichorCNA/ ## optional
 
 ## reference settings ##
 genomeBuild: hg38
 genomeStyle:  UCSC
 snpVCF:  /path/to/hapmap_3.3.hg38.vcf.gz ## optional
+cytobandFile:  data/cytoBand_hg38.txt # only need if hg38
 centromere:  data/GRCh38.GCA_000001405.2_centromere_acen.txt
 gender:  male
 

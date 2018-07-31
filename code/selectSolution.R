@@ -11,7 +11,8 @@ option_list <- list(
   make_option(c("--ploidyRun3"), type = "character", default = 0, help = "Directory containing TitanCNA results for initialized ploidy=3. [Required if --ploidyRun4 not given]"),
   make_option(c("--ploidyRun4"), type = "character", default = 0, help = "Directory containing TitanCNA results for initialized ploidy=4. [Required if --ploidyRun3 not given]"),
   make_option(c("--threshold"), type = "numeric", default=0.05, help = "Proportion ploidyRun2 likelihood greater than than ploidyRun3/4 by at least this value. [Default %default]"),
-  make_option(c("-o","--outFile"), type = "character", help = "Output file containing a list of solutions chosen for all samples. [Required]")
+  make_option(c("--outFile"), type = "character", help = "Output file containing a list of solutions chosen for all samples. [Required]")
+  #make_option(c("--outDir"), type = "character", help = "Output directory containing a list of solutions chosen for all samples. [Required]")
 )
 
 parseobj <- OptionParser(option_list=option_list, usage = "usage: Rscript %prog [options]")
@@ -25,9 +26,8 @@ phi2Dir <- opt$ploidyRun2
 phi3Dir <- opt$ploidyRun3
 phi4Dir <- opt$ploidyRun4
 threshold <- opt$threshold
-#outDir <- args[5]
 outFile <- opt$outFile
-#outLink <- args[6]
+
 
 homd.snp.thres <- 1500
 homd.snp.prop <- 0.02
@@ -137,8 +137,8 @@ for (i in 1:numPatients){
   optSolutionAll <- rbind(optSolutionAll, optSolution)
   
   #lnCmd <- paste0("cp -r ", optSolution$path, "* ", outDir, "/")
-	## apply link command ##
-	#write.table(lnCmd, file = fc, col.names=F, row.names=F, quote=F, sep="\t", append=T)
+  ## apply link command ##
+  #write.table(lnCmd, file = fc, col.names=F, row.names=F, quote=F, sep="\t", append=T)
 }
 #outFile <- paste0(basename(outDir), ".txt")
 write.table(optSolutionAll, file = outFile, col.names = T, row.names = F, quote = F, sep = "\t")

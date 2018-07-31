@@ -146,7 +146,7 @@ seqinfo <- Seqinfo(genome=genomeBuild)
 seqlevelsStyle(chrs) <- genomeStyle
 ## exclude chrX if gender==male ##
 if (gender == "male" || gender == "Male" || gender == "MALE"){
-	chrs <- chrs[chrs!=grep("X", chrs, value=TRUE)]
+	chrs <- chrs[!grepl("X", chrs)]
 }
 
 pseudo_counts <- 1e-300
@@ -234,14 +234,14 @@ save.image(file=outImage)
 
 #### PLOT RESULTS ####
 dir.create(outplot)
-if (genomeBuild == "hg38"){
-	cytoband <- fread(cytobandFile)
+if (genomeBuild == "hg38" && file.exists(cytobandFile)){
+	cytoband <- as.data.frame(fread(cytobandFile))
 	names(cytoband) <- c("chrom", "start", "end", "name", "gieStain")
 	#cytoband$V1 <- setGenomeStyle(cytoband$V1, genomeStyle = genomeStyle)
 }
 
 if (gender == "male"){
-	chrsToPlot <- chrs[chrs!=grep("X", chrs, value=TRUE)]
+	chrsToPlot <- chrs[!grepl("X", chrs)]
 }else{
 	chrsToPlot <- chrs
 }
@@ -269,12 +269,14 @@ for (chr in chrsToPlot){
 	#plotHaplotypeFraction(data, chr=chr, type = "HaplotypeRatio", colType = "haplotype", xlab="", ylim=c(0,1), cex=0.5, cex.axis=1.5, cex.lab=1.5)
 	maxCorCN <- segs[chr==chr, max(Corrected_Copy_Number, na.rm = TRUE)]
 	plotSegmentMedians(segs, chr=chr, resultType = "LogRatio", plotType = "CopyNumber", 
-				plot.new=TRUE, ylim=c(0,maxCorCN), xlab="", spacing=4)
+				plot.new=TRUE, ylim=c(0,maxCorCN), xlab="", cex.axis=1.5, cex.lab=1.5, spacing=4)
 	plotClonalFrequency(results, chr, normal=norm, geneAnnot=NULL, spacing=4, 
-					cex.axis=1.5, ylim=c(0,1), xlab="", cex=0.5, main=paste("Chr ",chr,sep=""))
+					cex.axis=1.5, ylim=c(0,1), xlab="", cex=0.5, cex.axis=1.5, cex.lab=1.5,
+					main=paste("Chr ",chr,sep=""))
   
   	par(xpd = NA)
-  	if (genomeBuild == "hg38"){
+  	if (genomeBuild == "hg38" && file.exists(cytobandFile)){
+  		sl <- seqlengths(seqinfo[chr])
   		pI <- plotIdiogram.hg38(chr, cytoband=cytoband, seqinfo=seqinfo, xlim=c(0, max(sl)), unit="bp", label.y=-0.35, new=FALSE, ylim=c(-0.2,-0.1))	
   	}else{
   		pI <- plotIdiogram(chr, build="hg19", unit="bp", label.y=-0.35, new=FALSE, ylim=c(-0.2,-0.1))	
