@@ -26,11 +26,14 @@ rule getHETsites:
 		minQual=config["het_minVCFQuality"],
 		minDepth=config["het_minDepth"],
 		minVAF=config["het_minVAF"],
-		libdir=config["TitanCNA_libdir"]
+		libdir=config["TitanCNA_libdir"],
+		mem=config["het_mem"],
+		runtime=config["het_runtime"],
+		pe=config["std_numCores"]
 	log:
 		"logs/phasedCounts/hetPosns/{tumor}.phasedHETsites.log"
 	shell:
-		"Rscript {params.getHETsitesScript} --inVCF {input} --genomeBuild {params.genomeBuild} -- genomeStyle {params.genomeStyle} --snpDB {params.snpDB} --minQuality {params.minQual} --minDepth {params.minDepth} --minVAF {params.minVAF} --altCountField AD --libdir {params.libdir} --outVCFgz {output} 2> {log}"
+		"Rscript {params.getHETsitesScript} --inVCF {input} --genomeBuild {params.genomeBuild} --genomeStyle {params.genomeStyle} --snpDB {params.snpDB} --minQuality {params.minQual} --minDepth {params.minDepth} --minVAF {params.minVAF} --altCountField AD --libdir {params.libdir} --outVCF {output} 2> {log}"
 
 
 rule getAlleleCountsByChr:
@@ -43,7 +46,10 @@ rule getAlleleCountsByChr:
 		countScript=config["phaseCounts_counts_script"],
 		mapQ=config["het_minMapQuality"],
 		baseQ=config["het_minBaseQuality"],
-		vcfQ=config["het_minVCFQuality"]
+		vcfQ=config["het_minVCFQuality"],
+		mem=config["std_mem"],
+		runtime=config["std_runtime"],
+		pe=config["std_numCores"]
 	log:
 		"logs/phasedCounts/tumCounts/{tumor}/{tumor}.tumCounts.{chr}.log"
 	shell:

@@ -24,8 +24,15 @@ gender:  male
 bamFileName:  phased_possorted_bam.bam
 phaseVariantFileName:  phased_variants.vcf.gz
 
-## params for each step ##
+## standard parameters for qsub memory, runtime, pe (parallel environment)
+# use what your scheduler designates for parallel environment; does not apply to local run
+# invoke using:
+# snakemake -s TitanCNA.snakefile --cluster-sync "qsub -l h_vmem={params.mem},h_rt={params.runtime} {params.pe}" -j 200 --jobscript config/cluster.sh
+std_mem:  4G
+std_runtime:  "03:00:00" 
+std_numCores:  -pe smp 1 -binding linear:1
 
+## params for each step ##
 ## bxTools ##
 bx_mapQual:  60
 bx_bedFileRoot:  data/10kb_hg38/10kb_hg38
@@ -41,13 +48,14 @@ molCov_maxCN:  8
 het_minVCFQuality:  100
 het_minDepth:  10
 het_minVAF:  0.25
+het_mem:  16G
+het_runtime:  "06:00:00"
 
 ## bam filters for tumor allelic counts ##
 het_minBaseQuality:  10
 het_minMapQuality:  20
 
 ## TitanCNA params ##
-TitanCNA_numCores: 1
 TitanCNA_maxNumClonalClusters: 1
 TitanCNA_chrs:  c(1:22, \"X\")
 TitanCNA_normalInit:  0.5
@@ -61,4 +69,9 @@ TitanCNA_alphaR:  5000
 TitanCNA_txnExpLen: 1e15
 TitanCNA_plotYlim:  c(-2,4)
 TitanCNA_solutionThreshold: 0.05
+TitanCNA_mem:  16G
+TitanCNA_runtime:  "10:00:00"
+TitanCNA_numCores: -pe smp 1 -binding linear:1  
+
+
 

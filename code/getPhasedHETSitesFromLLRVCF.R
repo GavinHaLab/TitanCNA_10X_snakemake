@@ -20,7 +20,7 @@ option_list <- list(
   make_option(c("--genomeStyle"), type = "character", default="NCBI", help = "Chr naming convention. NCBI (e.g. 1) or UCSC (e.g. chr1). Default: [%default]"),
   make_option(c("-s","--snpDB"), type="character", default=NULL, help= "VCF file of list of known SNPs (e.g. HapMap, 1000 Genomes, dbSNP)"),
   make_option(c("--altCountField"), type="character", default="AD", help="Alternate allele count field name in genotype. [Default: %default]"),
-  make_option(c("-o","--outVCFgz"), type = "character", help = "Output VCF file with suffix \"_phasedHets.vcf\" [Required]"),
+  make_option(c("-o","--outVCF"), type = "character", help = "Output VCF file with suffix \"_phasedHets.vcf\" [Required]"),
   make_option(c("--libdir"), type="character", default=NULL, help="Path to TitanCNA package directory. If provided, will source scripts after loading installed TitanCNA package.")
 )
 
@@ -29,6 +29,7 @@ opt <- parse_args(parseobj)
 print(opt)
 
 library(TitanCNA)
+library(GenomeInfoDb)
 library(VariantAnnotation)
 
 vcfFile <- opt$inVCF
@@ -39,8 +40,8 @@ chrs <- eval(parse(text = opt$chrs))
 minQUAL <- opt$minQuality
 minDepth <- opt$minDepth
 minVAF <- opt$minVAF
-outVCFgz <- opt$outVCFgz
-outVCF <- gsub("gz", "", outVCFgz)
+outVCF <- opt$outVCF
+outVCFgz <- paste0(outVCF, ".gz")
 libdir <- opt$libdir
 altCountField <- opt$altCountField
 
@@ -59,14 +60,14 @@ filterFlags <- c("PASS", "10X_RESCUED_MOLECULE_HIGH_DIVERSITY")
 #minQUAL <- 100
 keepGenotypes <- c("1|0", "0|1", "0/1")
 
-save.image("tmp.RData")
+
 
 #vcfFiles <- list.files(LRdir, pattern = "_phased_variants.vcf.gz$", full.name = TRUE)
 
 #for (i in 1:length(vcfFiles)){
 #id <- gsub("_phased_variants.vcf.gz", "", basename(vcfFile))
 hap <- getHaplotypesFromVCF(vcfFile, 
-			chrs = chrs, build = genomeBuild, style = genomeStyle,
+			chrs = chrs, build = genomeBuild, genomeStyle = genomeStyle,
 			filterFlags = filterFlags, minQUAL = minQUAL, minDepth = minDepth,
 			minVAF = minVAF, keepGenotypes = keepGenotypes, 
 			altCountField = altCountField, snpDB = snpFile)
@@ -75,10 +76,11 @@ hap <- getHaplotypesFromVCF(vcfFile,
 ## remove BX genotype field to make things faster
 geno(hap$vcf)$BX <- NULL
 
+message("Writing to file: ", outVCF)
 writeVcf(hap$vcf, filename = outVCF)
 bgzipFile <- bgzip(outVCF, dest = outVCFgz, overwrite = TRUE)
 indexTabix(bgzipFile, format = "vcf")
-	
+
 #	outFile <- paste0(outDir, "/", id, "_phasedGR.rds")
 #	saveRDS(hap$geno, file = outFile)
 								

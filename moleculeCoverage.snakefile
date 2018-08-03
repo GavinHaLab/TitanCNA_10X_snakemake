@@ -13,6 +13,8 @@ rule correctMolCov:
   input: 
   	expand("results/bxTile/{samples}/{samples}.bxTile.{chr}.bed", samples=config["samples"], chr=CHRS),
   	#expand("results/moleculeCoverage/{tumor}/{tumor}.cna.seg", tumor=config["pairings"]),
+  	#expand("results/moleculeCoverage/{tumor}/{tumor}.seg.txt", tumor=config["pairings"]),
+  	#expand("results/moleculeCoverage/{tumor}/{tumor}.params.txt", tumor=config["pairings"]),
   	expand("results/moleculeCoverage/{tumor}/{tumor}.BXcounts.txt", tumor=config["pairings"]),
   	expand("results/bxTile/{samples}/", samples=config["samples"])
 
@@ -33,8 +35,9 @@ rule bxTile:
 		samTools=config["samTools"],
 		mapQual=config["bx_mapQual"],
 		bedFile=config["bx_bedFileRoot"]
-	resources:
-		mem=4
+		mem=config["std_mem"],
+		runtime=config["std_runtime"],
+		pe=config["std_numCores"]
 	log:
 		"logs/bxTile/{samples}/{samples}.bxTile.{chr}.log"
 	shell:
@@ -48,7 +51,8 @@ rule moleculeCoverage:
 	output:
 		corrDepth="results/moleculeCoverage/{tumor}/{tumor}.BXcounts.txt",
 		cna="results/moleculeCoverage/{tumor}/{tumor}.cna.seg",
-		#segTxt="results/moleculeCoverage/{tumor}/{tumor}.seg.txt",
+		segTxt="results/moleculeCoverage/{tumor}/{tumor}.seg.txt",
+		paramTxt="results/moleculeCoverage/{tumor}/{tumor}.params.txt",
 		outDir="results/moleculeCoverage/{tumor}/",
 	params:
 		molCovScript=config["molCov_script"],
@@ -61,9 +65,10 @@ rule moleculeCoverage:
 		mapwig=config["molCov_mapWig"],
 		titanLibDir=config["TitanCNA_libdir"],
 		ichorLibDir=config["ichorCNA_libdir"],
-		centromere=config["centromere"]
-	resources:
-		mem=4
+		centromere=config["centromere"],
+		mem=config["std_mem"],
+		runtime=config["std_runtime"],
+		pe=config["std_numCores"]
 	log:
 		"logs/moleculeCoverage/{tumor}.molCov.log"	
 	shell:		

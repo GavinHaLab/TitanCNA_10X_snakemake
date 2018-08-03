@@ -8,7 +8,7 @@ Viswanathan SR*, Ha G*, Hoff A*, et al. Structural Alterations Driving Castratio
 Gavin Ha  
 Fred Hutchinson Cancer Research Center  
 contact: <gavinha@gmail.com> or <gha@fredhutch.org>  
-Date: July 26, 2018  
+Date: August 3, 2018  
 
 ## Requirements
 ### Software packages or libraries
@@ -62,7 +62,7 @@ snakemake -s TitanCNA.snakefile -np
 # run the workflow locally using 5 cores
 snakemake -s TitanCNA.snakefile --cores 5
 # run the workflow on qsub using a maximum of 50 jobs. Broad UGER cluster parameters can be set directly in config/cluster.sh. 
-snakemake -s TitanCNA.snakefile --cluster-sync "qsub" -j 50 --jobscript config/cluster.sh
+snakemake -s TitanCNA.snakefile --cluster-sync "qsub -l h_vmem={params.mem},h_rt={params.runtime}" -j 50 --jobscript config/cluster.sh
 ```
 This will also run both `moleculeCoverage.snakefile` and `getPhasedAlleleCounts.snakefile` which generate the necessary inputs for `TitanCNA.snakfile`.
 

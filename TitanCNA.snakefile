@@ -55,7 +55,10 @@ rule runTitanCNA:
 		alphaR=config["TitanCNA_alphaR"],
 		#alleleModel=config["TitanCNA_alleleModel"],
 		txnExpLen=config["TitanCNA_txnExpLen"],
-		plotYlim=config["TitanCNA_plotYlim"]
+		plotYlim=config["TitanCNA_plotYlim"],
+		mem=config["TitanCNA_mem"],
+		runtime=config["TitanCNA_runtime"],
+		pe=config["TitanCNA_numCores"]
 	log:
 		"logs/titan/titanCNA_ploidy{ploidy}/{tumor}_cluster{clustNum}.log"
 	shell:
@@ -77,7 +80,10 @@ rule combineTitanAndIchorCNA:
 		combineScript=config["TitanCNA_combineTitanIchorCNA"],
 		libdir=config["TitanCNA_libdir"],
 		centromere=config["centromere"],
-		gender=config["gender"]
+		gender=config["gender"],
+		mem=config["std_mem"],
+		runtime=config["std_runtime"],
+		pe=config["std_numCores"]
 	log:
 		"logs/titan/titanCNA_ploidy{ploidy}/{tumor}_cluster{clustNum}.combineTitanIchorCNA.log"
 	shell:
@@ -92,7 +98,10 @@ rule selectSolution:
 		solutionsTxt="results/titan/optimalClusterSolution.txt",
 	params:
 		solutionRscript=config["TitanCNA_selectSolutionRscript"],
-		threshold=config["TitanCNA_solutionThreshold"]
+		threshold=config["TitanCNA_solutionThreshold"],
+		mem=config["std_mem"],
+		runtime=config["std_runtime"],
+		pe=config["std_numCores"]
 	log:
 		"logs/titan/optSolution/selectSolution.log"
 	shell:

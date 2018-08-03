@@ -92,6 +92,7 @@ normalizeMaleX <- as.logical(opt$normalizeMaleX)
 includeHOMD <- as.logical(opt$includeHOMD)
 fracReadsInChrYForMale <- opt$fracReadsInChrYForMale
 outDir <- opt$outDir
+outPlotDir <- paste0(outDir, "/", patientID) 
 libdirTitanCNA <- opt$libdirTitanCNA
 libdirIchorCNA <- opt$libdirIchorCNA
 plotFileType <- opt$plotFileType
@@ -142,6 +143,8 @@ if (is.null(centromere) || centromere == "None" || centromere == "NULL"){ # no c
 }
 centromere <- read.delim(centromere,header=T,stringsAsFactors=F,sep="\t")
 
+save.image(outImage)
+
 ## LOAD IN WIG FILES ##
 numSamples <- 1
 tumour_counts <- list()
@@ -150,6 +153,7 @@ for (i in 1:numSamples) {
   id <- patientID
   ## create output directories for each sample ##
   dir.create(paste0(outDir, "/"), recursive = TRUE)
+  dir.create(paste0(outPlotDir, "/"), recursive = TRUE)
   ### LOAD TUMOUR AND NORMAL FILES ###
   message("Loading tumour files from ", tumour_file)
   tumour_doc <- loadBXcountsFromBEDDir(tumour_file, chrs = chrsAll, minReads = minReadsPerBX)
@@ -302,7 +306,7 @@ for (n in normal){
 				hmmResults.cor$results$n[s, iter] <- 1.0
     		}
       ## plot solution ##
-      outPlotFile <- paste0(outDir, "/", id, "/", id, "_genomeWide_", "n", n, "-p", p)
+      outPlotFile <- paste0(outPlotDir, "/", id, "_genomeWide_", "n", n, "-p", p)
       mainName[counter] <- paste0(id, ", n: ", n, ", p: ", p, ", log likelihood: ", signif(hmmResults.cor$results$loglik[hmmResults.cor$results$iter], digits = 4))
       plotGWSolution(hmmResults.cor, s=s, outPlotFile=outPlotFile, plotFileType=plotFileType, 
                      plotYLim=plotYLim, estimateScPrevalence=estimateScPrevalence, main=mainName[counter])
