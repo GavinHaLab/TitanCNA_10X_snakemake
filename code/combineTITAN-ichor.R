@@ -19,7 +19,7 @@ option_list <- list(
   	make_option(c("--ichorSeg"), type="character", help="ichorCNA segs.txt file. Required."),
 	make_option(c("--ichorBin"), type="character", help="ichorCNA cna.seg file. Required."),
 	make_option(c("--ichorParams"), type="character", help="ichorCNA params.txt file. Required."),
-	make_option(c("--gender"), type="character", default="female", help="female or male. Default [%default]."),
+	make_option(c("--sex"), type="character", default="female", help="female or male. Default [%default]."),
 	make_option(c("--libdir"), type="character", help="TitanCNA directory path to source R files if custom changes made."),
   	make_option(c("--outSegFile"), type="character", help="New combined segment file. Required"),
   	make_option(c("--outBinFile"), type="character", help="New combined bin-level file. Required"),
@@ -36,7 +36,7 @@ titanParams <- opt$titanParams
 ichorSeg <- opt$ichorSeg
 ichorBin <- opt$ichorBin
 ichorParams <- opt$ichorParams
-gender <- opt$gender
+gender <- opt$sex
 outSegFile <- opt$outSegFile
 outBinFile <- opt$outBinFile
 centromere <- opt$centromere

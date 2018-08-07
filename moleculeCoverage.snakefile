@@ -34,7 +34,7 @@ rule bxTile:
 		bxTools=config["bxTools"],
 		samTools=config["samTools"],
 		mapQual=config["bx_mapQual"],
-		bedFile=config["bx_bedFileRoot"]
+		bedFile=config["bx_bedFileRoot"],
 		mem=config["std_mem"],
 		runtime=config["std_runtime"],
 		pe=config["std_numCores"]

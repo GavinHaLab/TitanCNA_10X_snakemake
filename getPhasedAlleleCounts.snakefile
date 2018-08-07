@@ -10,9 +10,8 @@ def getLRFullPath(base, filename):
 
 rule phasedCounts:
 	input: 
-		expand("results/phasedCounts/tumCounts/{tumor}/{tumor}.tumCounts.{chr}.txt", tumor=config["pairings"], chr=CHRS),		
 		expand("results/phasedCounts/tumCounts/{tumor}.tumCounts.txt", tumor=config["pairings"])
-	
+		
 rule getHETsites:
 	input:
 		lambda wildcards: getLRFullPath(config["samples"][config["pairings"][wildcards.tumor]], config["phaseVariantFileName"])
@@ -33,7 +32,7 @@ rule getHETsites:
 	log:
 		"logs/phasedCounts/hetPosns/{tumor}.phasedHETsites.log"
 	shell:
-		"Rscript {params.getHETsitesScript} --inVCF {input} --genomeBuild {params.genomeBuild} --genomeStyle {params.genomeStyle} --snpDB {params.snpDB} --minQuality {params.minQual} --minDepth {params.minDepth} --minVAF {params.minVAF} --altCountField AD --libdir {params.libdir} --outVCF {output} 2> {log}"
+		"Rscript {params.getHETsitesScript} --inVCF {input} --genomeBuild {params.genomeBuild} --genomeStyle {params.genomeStyle} --snpDB {params.snpDB} --minQuality {params.minQual} --minDepth {params.minDepth} --minVAF {params.minVAF} --altCountField AD --libdir {params.libdir} --outVCF {output} > {log} 2> {log}"
 
 
 rule getAlleleCountsByChr:

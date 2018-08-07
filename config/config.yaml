@@ -9,7 +9,7 @@ phaseCounts_counts_script:  code/getTumourAlleleCountsAtHETSites.py
 TitanCNA_rscript: code/titanCNA_v1.15.0_TenX.R
 TitanCNA_selectSolutionRscript: code/selectSolution.R
 TitanCNA_combineTitanIchorCNA:  code/combineTITAN-ichor.R
-TitanCNA_libdir:  /path/to/TitahCNA/ ## optional
+TitanCNA_libdir:  /path/to/TitanCNA/ ## optional
 ichorCNA_libdir:  /path/to/ichorCNA/ ## optional
 
 ## reference settings ##
@@ -18,7 +18,7 @@ genomeStyle:  UCSC
 snpVCF:  /path/to/hapmap_3.3.hg38.vcf.gz ## optional
 cytobandFile:  data/cytoBand_hg38.txt # only need if hg38
 centromere:  data/GRCh38.GCA_000001405.2_centromere_acen.txt
-gender:  male
+sex:  male
 
 ## LongRanger params ##
 bamFileName:  phased_possorted_bam.bam
@@ -56,7 +56,7 @@ het_minBaseQuality:  10
 het_minMapQuality:  20
 
 ## TitanCNA params ##
-TitanCNA_maxNumClonalClusters: 1
+TitanCNA_maxNumClonalClusters: 2
 TitanCNA_chrs:  c(1:22, \"X\")
 TitanCNA_normalInit:  0.5
 TitanCNA_maxPloidy:  3
@@ -69,9 +69,10 @@ TitanCNA_alphaR:  5000
 TitanCNA_txnExpLen: 1e15
 TitanCNA_plotYlim:  c(-2,4)
 TitanCNA_solutionThreshold: 0.05
+TitanCNA_numCores:  1
 TitanCNA_mem:  16G
-TitanCNA_runtime:  "10:00:00"
-TitanCNA_numCores: -pe smp 1 -binding linear:1  
+TitanCNA_runtime:  "300:00:00"
+TitanCNA_pe: -pe smp 1 -binding linear:1  
 
 
 

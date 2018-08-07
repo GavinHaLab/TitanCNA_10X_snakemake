@@ -34,7 +34,7 @@ option_list <- list(
 	make_option(c("--genomeStyle"), type = "character", default = "NCBI", help = "NCBI or UCSC chromosome naming convention; use UCSC if desired output is to have \"chr\" string. [Default: %default]"),
 	make_option(c("--genomeBuild"), type = "character", default = "hg38", help="Genome build to use; will load Seqinfo from GenomeInfoDb."),
 	make_option(c("--chrs"), type = "character", default = "c(1:22, 'X')", help = "Chromosomes to analyze; string [Default: %default"),
-	make_option(c("--gender"), type = "character", default = "male", help = "User specified gender: male or female [Default: %default]"),
+	make_option(c("--sex"), type = "character", default = "male", help = "User specified sex: male or female [Default: %default]"),
 	make_option(c("--cytobandFile"), type = "character", default = NULL, help = "Cytoband file should be provided only if reference genome is hg38."),
 	make_option(c("--mapWig"), type = "character", default = NULL, help = "Mappability score file for bin sizes matching cnfile. [Default: %default]"),
 	make_option(c("--mapThres"), type = "numeric", default = 0.9, help = "Minimum mappability score threshold to use; float [Default: %default]"),
@@ -100,7 +100,7 @@ chrs <- eval(parse(text = opt$chrs))
 genomeStyle <- opt$genomeStyle
 genomeBuild <- opt$genomeBuild
 cytobandFile <- opt$cytobandFile
-gender <- opt$gender
+sex <- opt$sex
 mapWig <- opt$mapWig
 centromere <- opt$centromere
 haplotypeBinSize <- opt$haplotypeBinSize
@@ -144,8 +144,8 @@ outImage <- gsub(".titan.txt", ".RData", outfile)
 ## set up chromosome naming convention ##
 seqinfo <- Seqinfo(genome=genomeBuild)
 seqlevelsStyle(chrs) <- genomeStyle
-## exclude chrX if gender==male ##
-if (gender == "male" || gender == "Male" || gender == "MALE"){
+## exclude chrX if sex==male ##
+if (sex == "male" || sex == "Male" || sex == "MALE"){
 	chrs <- chrs[!grepl("X", chrs)]
 }
 
@@ -222,7 +222,7 @@ save.image(file=outImage)
 #### OUTPUT SEGMENTS ####
 segs <- outputTitanSegments(results, id, convergeParams, filename = NULL, igvfilename = outigv)
 corrIntCN.results <- correctIntegerCN(results, segs, 1 - norm, ploidy, maxCNtoCorrect.autosomes = maxCN, 
-		maxCNtoCorrect.X = NULL, minPurityToCorrect = 0.2, gender = gender, chrs = chrs)
+		maxCNtoCorrect.X = NULL, minPurityToCorrect = 0.2, gender = sex, chrs = chrs)
 results <- corrIntCN.results$cn
 segs <- corrIntCN.results$segs
 message("Writing results to ", outfile, ",\n\t", outseg, ",\n\t", outparam)
@@ -240,7 +240,7 @@ if (genomeBuild == "hg38" && file.exists(cytobandFile)){
 	#cytoband$V1 <- setGenomeStyle(cytoband$V1, genomeStyle = genomeStyle)
 }
 
-if (gender == "male"){
+if (sex == "male"){
 	chrsToPlot <- chrs[!grepl("X", chrs)]
 }else{
 	chrsToPlot <- chrs

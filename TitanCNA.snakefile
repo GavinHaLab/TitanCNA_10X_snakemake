@@ -45,7 +45,7 @@ rule runTitanCNA:
 		numCores=config["TitanCNA_numCores"],
 		normal=config["TitanCNA_normalInit"],
 		chrs=config["TitanCNA_chrs"],
-		gender=config["gender"],
+		sex=config["sex"],
 		estimatePloidy=config["TitanCNA_estimatePloidy"],
 		estimateClonality=config["TitanCNA_estimateClonality"],
 		estimateNormal=config["TitanCNA_estimateNormal"],
@@ -58,11 +58,11 @@ rule runTitanCNA:
 		plotYlim=config["TitanCNA_plotYlim"],
 		mem=config["TitanCNA_mem"],
 		runtime=config["TitanCNA_runtime"],
-		pe=config["TitanCNA_numCores"]
+		pe=config["TitanCNA_pe"]
 	log:
 		"logs/titan/titanCNA_ploidy{ploidy}/{tumor}_cluster{clustNum}.log"
 	shell:
-		"Rscript {params.titanRscript} --id {wildcards.tumor} --hetFile {input.alleleCounts} --cnFile {input.corrDepth} --numClusters {wildcards.clustNum} --numCores {params.numCores} --normal_0 {params.normal} --ploidy_0 {wildcards.ploidy} --chrs \"{params.chrs}\" --gender {params.gender} --haplotypeBinSize {params.haplotypeBinSize} --estimateNormal {params.estimateNormal} --estimatePloidy {params.estimatePloidy} --estimateClonality {params.estimateClonality}  --centromere {params.centromere} --genomeBuild {params.genomeBuild} --genomeStyle {params.genomeStyle} --libdir {params.libdir} --alphaK {params.alphaK} --alphaR {params.alphaR} --alleleModel Gaussian --txnExpLen {params.txnExpLen} --plotYlim \"{params.plotYlim}\" --cytobandFile {params.cytobandFile} --outFile {output.titan} --outSeg {output.segTxt} --outParam {output.param} --outIGV {output.seg} --outPlotDir {output.outRoot} > {log} 2> {log}"
+		"Rscript {params.titanRscript} --id {wildcards.tumor} --hetFile {input.alleleCounts} --cnFile {input.corrDepth} --numClusters {wildcards.clustNum} --numCores {params.numCores} --normal_0 {params.normal} --ploidy_0 {wildcards.ploidy} --chrs \"{params.chrs}\" --sex {params.sex} --haplotypeBinSize {params.haplotypeBinSize} --estimateNormal {params.estimateNormal} --estimatePloidy {params.estimatePloidy} --estimateClonality {params.estimateClonality}  --centromere {params.centromere} --genomeBuild {params.genomeBuild} --genomeStyle {params.genomeStyle} --libdir {params.libdir} --alphaK {params.alphaK} --alphaR {params.alphaR} --alleleModel Gaussian --txnExpLen {params.txnExpLen} --plotYlim \"{params.plotYlim}\" --cytobandFile {params.cytobandFile} --outFile {output.titan} --outSeg {output.segTxt} --outParam {output.param} --outIGV {output.seg} --outPlotDir {output.outRoot} > {log} 2> {log}"
 	
 				
 rule combineTitanAndIchorCNA:
@@ -80,14 +80,14 @@ rule combineTitanAndIchorCNA:
 		combineScript=config["TitanCNA_combineTitanIchorCNA"],
 		libdir=config["TitanCNA_libdir"],
 		centromere=config["centromere"],
-		gender=config["gender"],
+		sex=config["sex"],
 		mem=config["std_mem"],
 		runtime=config["std_runtime"],
 		pe=config["std_numCores"]
 	log:
 		"logs/titan/titanCNA_ploidy{ploidy}/{tumor}_cluster{clustNum}.combineTitanIchorCNA.log"
 	shell:
-		"Rscript {params.combineScript} --libdir {params.libdir} --titanSeg {input.titanSeg} --titanBin {input.titanBin} --titanParam {input.titanParam} --ichorSeg {input.ichorSeg} --ichorBin {input.ichorBin} --ichorParam {input.ichorParam} --gender {params.gender} --outSegFile {output.segFile} --outBinFile {output.binFile} --centromere {params.centromere} > {log} 2> {log}"	
+		"Rscript {params.combineScript} --libdir {params.libdir} --titanSeg {input.titanSeg} --titanBin {input.titanBin} --titanParam {input.titanParam} --ichorSeg {input.ichorSeg} --ichorBin {input.ichorBin} --ichorParam {input.ichorParam} --sex {params.sex} --outSegFile {output.segFile} --outBinFile {output.binFile} --centromere {params.centromere} > {log} 2> {log}"	
 
 
 rule selectSolution:
