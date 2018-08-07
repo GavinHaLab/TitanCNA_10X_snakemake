@@ -127,14 +127,17 @@ TitanCNA_combineTitanIchorCNA:  code/combineTITAN-ichor.R
 ```
 
 ### 3. Path to R package files
-Specify the directory in which [TitanCNA](https://github.com/gavinha/TitanCNA) and [ichorCNA](https://github.com/broadinstitute/ichorCNA) are installed. *Set these if the R files in these libraries have been modified or updated but not yet installed with R*.
+Specify the directory in which [TitanCNA](https://github.com/gavinha/TitanCNA) and [ichorCNA](https://github.com/broadinstitute/ichorCNA) are installed.  
+*Set these if the R files in these libraries have been modified or updated but not yet installed or updated in R*.
 ```
 TitanCNA_libdir:  /path/to/TitanCNA/ ## optional
 ichorCNA_libdir:  /path/to/ichorCNA/ ## optional
 ```
 
 ### 4. Reference files and settings
-Global reference files used by many of the `snakefiles` and scripts. For the `snpVCF`, you can download the HapMap file (used for filtering heterozygous SNPs) here: https://console.cloud.google.com/storage/browser/genomics-public-data/resources/broad/hg38/v0 
+Global reference files used by many of the `snakefiles` and scripts.  
+- `snpVCF`, you can download the HapMap file (used for filtering heterozygous SNPs) here: https://console.cloud.google.com/storage/browser/genomics-public-data/resources/broad/hg38/v0  
+- `genomeStyle` specifies the chromosome naming convention to used for **output** files. Input files can be any convention as long as it is the same genome build. Only use `UCSC` (e.g. chr1) or `NCBI` (e.g. 1). 
 ```
 genomeBuild: hg38
 genomeStyle:  UCSC
@@ -170,9 +173,9 @@ bx_bedFileRoot:  data/10kb_hg38/10kb_hg38  # bed files to specify intervals for 
 
 ### 8. [moleculeCoverage.snakefile](moleculeCoverage.snakefile) settings
 Settings for the analysis of molecule coverage.  
-`molCov_minReadsPerBX` specify the minimum number of reads required for a barcode to be counted in the coverage.  
-`molCov_chrs` specifies the chromosomes to analyze; users do not need to be concerned about chromosome naming convention here as the code will handle it based on the `genomeStyle` set in the reference settings above.  
-The GC and Map wig files must have bin sizes that match the `bx_bedFileRoot` bed files. At the moment, only 10kb is supported.
+- `molCov_minReadsPerBX` specify the minimum number of reads required for a barcode to be counted in the coverage.  
+- `molCov_chrs` specifies the chromosomes to analyze; users do not need to be concerned about chromosome naming convention here as the code will handle it based on the `genomeStyle` set in the reference settings above.  
+- The GC and Map wig files must have bin sizes that match the `bx_bedFileRoot` bed files. At the moment, only 10kb is supported.
 ```
 molCov_minReadsPerBX:  2
 molCov_chrs:  c(1:22, \"X\")
@@ -181,7 +184,7 @@ molCov_mapWig:  data/map_hg38_10kb.wig
 molCov_maxCN:  8
 ```
 
-### 9. Heterozygous SNP extraction settings
+### 9. [getPhasedAlleleCounts.snakefile](getPhasedAlleleCounts.snakefile) settings: Heterozygous SNP 
 Minimum thresholds used when determining heterozygous SNP sites from the Long Ranger `phased_variants.vcf.gz` file for the matched normal sample.
 ```
 het_minVCFQuality:  100
@@ -189,18 +192,18 @@ het_minDepth:  10
 het_minVAF:  0.25
 ```
 
-### 10. Tumor allelic counts settings
+### 10. [getPhasedAlleleCounts.snakefile](getPhasedAlleleCounts.snakefile) settings: Tumor allelic counts 
 Minimum thresholds to use for extracting allelic read counts from the tumor sample.
 ```
 het_minBaseQuality:  10
 het_minMapQuality:  20
 ```
 
-### 11. TitanCNA settings
-Most settings can be left as default. 
-`TitanCNA_maxNumClonalClusters` specifies the maximum number of clonal clusters to consider. For example, if set to 5, then 5 solutions are generated, each one considering a different number of cluster(s).
-`TitanCNA_maxPloidy` specifies the maximum ploidy to initialize. This be set to either `2` (only considers diploid solutions), `3` (considers diploid and triploid, and usually accounts for tetraploid), or `4` (for diploid, triploid, tetraploid or higher ploidies). Usually, `3` is suitable for most samples unless you know that your samples are tetraploid or even higher. For example, if set to `3`, then solutions for diploid and triploid will be generated. [code/selectSolution.R](code/selectSolution.R) will try to select the optimal solution; however, users should inspect to make sure results are accurate.
-`TitanCNA_numCores` specifies the number of cores to use on a single machine. `TitanCNA_pe` should also be set as to be consistent.
+### 11. [TitanCNA.snakefile](TitanCNA.snakefile) settings
+Most settings can be left as default.  
+- `TitanCNA_maxNumClonalClusters` specifies the maximum number of clonal clusters to consider. For example, if set to 5, then 5 solutions are generated, each one considering a different number of cluster(s).  
+- `TitanCNA_maxPloidy` specifies the maximum ploidy to initialize. This be set to either `2` (only considers diploid solutions), `3` (considers diploid and triploid, and usually accounts for tetraploid), or `4` (for diploid, triploid, tetraploid or higher ploidies). Usually, `3` is suitable for most samples unless you know that your samples are tetraploid or even higher. For example, if set to `3`, then solutions for diploid and triploid will be generated. [code/selectSolution.R](code/selectSolution.R) will try to select the optimal solution; however, users should inspect to make sure results are accurate.  
+- `TitanCNA_numCores` specifies the number of cores to use on a single machine. `TitanCNA_pe` should also be set as to be consistent.
 ```
 TitanCNA_maxNumClonalClusters: 2
 TitanCNA_chrs:  c(1:22, \"X\")
