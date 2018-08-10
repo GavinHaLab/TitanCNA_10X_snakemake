@@ -93,7 +93,7 @@ rule combineTitanAndIchorCNA:
 rule selectSolution:
 	input:
 		ploidyDirs=expand("results/titan/titanCNA_ploidy{ploidy}/", ploidy=PLOIDY[config["TitanCNA_maxPloidy"]]),
-		resultFiles=expand("results/titan/titanCNA_ploidy{ploidy}/{tumor}_cluster{clustNum}.titan.txt", tumor=config["pairings"], clustNum=CLUST[config["TitanCNA_maxNumClonalClusters"]], ploidy=PLOIDY[config["TitanCNA_maxPloidy"]])
+		resultFiles=expand("results/titan/titanCNA_ploidy{ploidy}/{tumor}_cluster{clustNum}.titan.ichor.seg.txt", tumor=config["pairings"], clustNum=CLUST[config["TitanCNA_maxNumClonalClusters"]], ploidy=PLOIDY[config["TitanCNA_maxPloidy"]])
 	output:
 		solutionsTxt="results/titan/optimalClusterSolution.txt",
 	params:
