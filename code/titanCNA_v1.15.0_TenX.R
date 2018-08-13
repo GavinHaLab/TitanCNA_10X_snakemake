@@ -13,6 +13,7 @@ option_list <- list(
 	make_option(c("--hetFile"), type = "character", help = "File containing allelic read counts at HET sites. [Required]"),
 	make_option(c("--cnFile"), type = "character", help = "File containing normalized coverage as log2 ratios. [Required]"),
 	make_option(c("--outDir"), type = "character", help = "Output directory to output the results. [Required]"),
+	make_option(c("--ichorParamFile"), type = "character", default = NULL, help = "ichorCNA parameter file to use to determine sex if not provided. [Default: %default]"),
 	make_option(c("--numClusters"), type = "integer", default = 1, help = "Number of clonal clusters. [Default: 1]"),
 	make_option(c("--numCores"), type = "integer", default = 1, help = "Number of cores to use. [Default: %default]"),
 	make_option(c("--ploidy_0"), type = "numeric", default = 2, help = "Initial ploidy value; float [Default: %default]"),
@@ -34,7 +35,7 @@ option_list <- list(
 	make_option(c("--genomeStyle"), type = "character", default = "NCBI", help = "NCBI or UCSC chromosome naming convention; use UCSC if desired output is to have \"chr\" string. [Default: %default]"),
 	make_option(c("--genomeBuild"), type = "character", default = "hg38", help="Genome build to use; will load Seqinfo from GenomeInfoDb."),
 	make_option(c("--chrs"), type = "character", default = "c(1:22, 'X')", help = "Chromosomes to analyze; string [Default: %default"),
-	make_option(c("--sex"), type = "character", default = "male", help = "User specified sex: male or female [Default: %default]"),
+	make_option(c("--sex"), type = "character", default = "None", help = "User specified sex: male or female or None [Default: %default]"),
 	make_option(c("--cytobandFile"), type = "character", default = NULL, help = "Cytoband file should be provided only if reference genome is hg38."),
 	make_option(c("--mapWig"), type = "character", default = NULL, help = "Mappability score file for bin sizes matching cnfile. [Default: %default]"),
 	make_option(c("--mapThres"), type = "numeric", default = 0.9, help = "Minimum mappability score threshold to use; float [Default: %default]"),
@@ -77,6 +78,7 @@ if (!is.null(libdir) && libdir != "None"){
 id <- opt$id
 hetfile <- opt$hetFile
 cnfile <- opt$cnFile
+ichorParamFile <- opt$ichorParamFile
 numClusters <- opt$numClusters
 numCores <- opt$numCores
 ploidy_0 <- opt$ploidy_0
@@ -144,8 +146,22 @@ outImage <- gsub(".titan.txt", ".RData", outfile)
 ## set up chromosome naming convention ##
 seqinfo <- Seqinfo(genome=genomeBuild)
 seqlevelsStyle(chrs) <- genomeStyle
+
+## set up sex for analysis
+if (sex == "None" || is.null(sex)){
+	if (file.exists(ichorParamFile)){
+		ichorParams <- read.delim(ichorParamFile, header=T, as.is=T)
+		sex <- as.character(ichorParams[3, 2])
+	}else{
+		stop("TitanCNA: one of sex (male/female) or ichorParamFile must be provided.")
+	}
+	if (sex == "unknown" || sex == "Unknown"){
+		sex <- "male"
+	} 
+}
+message("Analyzing sample as sex: ", sex)
 ## exclude chrX if sex==male ##
-if (sex == "male" || sex == "Male" || sex == "MALE"){
+if (sex == "male" || sex == "Male" || sex == "MALE" || sex == "None" || is.null(sex)){
 	chrs <- chrs[!grepl("X", chrs)]
 }
 
@@ -240,13 +256,18 @@ if (genomeBuild == "hg38" && file.exists(cytobandFile)){
 	#cytoband$V1 <- setGenomeStyle(cytoband$V1, genomeStyle = genomeStyle)
 }
 
-if (sex == "male"){
+if (sex == "male" || sex == "Male" || sex == "MALE" || sex == "None" || is.null(sex)){
 	chrsToPlot <- chrs[!grepl("X", chrs)]
 }else{
 	chrsToPlot <- chrs
 }
 for (chr in chrsToPlot){
-	outfig <- paste0(outplot, "/", id, "_cluster", numClustersStr, "_chr", chr, ".png")
+	if (grep("chr", chr)){ 
+		chrStr <- chr 
+	}else{
+		chrStr <- paste0("chr", chr)
+	}	
+	outfig <- paste0(outplot, "/", id, "_cluster", numClustersStr, "_", chrStr, ".png")
 	png(outfig,width=1200,height=1000,res=100)
 	par(mfrow=c(5,1))  
 

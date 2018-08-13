@@ -41,6 +41,7 @@ outSegFile <- opt$outSegFile
 outBinFile <- opt$outBinFile
 centromere <- opt$centromere
 libdir <- opt$libdir
+outImageFile <- gsub(".seg.txt", ".RData", outSegFile)
 
 library(TitanCNA)
 library(stringr)
@@ -52,7 +53,7 @@ if (!is.null(libdir) && libdir != "None"){
 }
 
 options(stringsAsFactors=F, width=150, scipen=999)
-
+save.image(outImageFile)
 ## copy number state mappings ##
 ichorCNmap <- list("0"="HOMD", "1"="DLOH", "2"="NEUT", "3"="GAIN", "4"="AMP", "5"="AMP")
 maxichorcn <- 5
@@ -147,5 +148,4 @@ write.table(cn, file = outBinFile, col.names=T, row.names=F, quote=F, sep="\t")
 outSegNoSNPFile <- gsub(".txt", ".noSNPs.txt", outSegFile)
 write.table(segs[, -c("Start.snp", "End.snp")], file = outSegNoSNPFile, col.names=T, row.names=F, quote=F, sep="\t")
 
-outImageFile <- gsub(".segs.txt", ".RData", outSegFile)
 save.image(outImageFile)
