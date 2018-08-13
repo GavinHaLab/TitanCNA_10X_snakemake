@@ -60,7 +60,7 @@ formatParams <- function(params){
 	cellPrev <- strsplit(params[grepl("Clonal cluster cellular prevalence", 
 	  rownames(params)), 1], " ")[[1]]
 	numClust <- length(cellPrev)
-	cellPrev <- paste0(format(cellPrev, digits=4), collapse=",")
+	cellPrev <- paste0(format(as.numeric(cellPrev), digits=4, nsmall=4), collapse=",")
 	norm <- as.numeric(params[grepl("Normal contamination estimate", rownames(params)), 1])
 	purity <- 1 - norm
 	ploidy <- as.numeric(params[grepl("Average tumour ploidy estimate", rownames(params)), 1])
