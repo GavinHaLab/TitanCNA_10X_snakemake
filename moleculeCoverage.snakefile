@@ -21,6 +21,10 @@ rule correctMolCov:
 rule mkdir:
 	output:
 		"results/bxTile/{samples}/"
+	params:
+		mem=config["std_mem"],
+		runtime=config["std_runtime"],
+		pe=config["std_numCores"]
 	shell:
 		"mkdir -p {output}"
 
@@ -45,7 +49,7 @@ rule bxTile:
 
 rule moleculeCoverage:
 	input:
-		tumBed=expand("results/bxTile/{samples}/{samples}.bxTile.{chr}.bed", samples=config["samples"], chr=CHRS),
+		#tumBed=expand("results/bxTile/{samples}/{samples}.bxTile.{chr}.bed", samples=config["samples"], chr=CHRS),
 		tumDir="results/bxTile/{tumor}/",
 		normDir=lambda wildcards: "results/bxTile/" + config["pairings"][wildcards.tumor] + "/"
 	output:
