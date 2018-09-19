@@ -60,6 +60,9 @@ maxichorcn <- 5
 
 ## load segments 
 titan <- fread(titanSeg)
+if (length(titan[["Cellular_Frequency"]] == 0)){
+	setnames(titan, "Cellular_Frequency", "Cellular_Prevalence")
+}
 ichor <- fread(ichorSeg)
 setnames(ichor, c("ID", "chrom", "start", "end", "num.mark", "seg.median.logR", "copy.number", "call"), 
 		c("Sample", "Chromosome", "Start_Position.bp.", "End_Position.bp.", 

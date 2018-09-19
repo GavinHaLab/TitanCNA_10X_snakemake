@@ -59,6 +59,10 @@ rule catAlleleCountFiles:
 		expand("results/phasedCounts/tumCounts/{{tumor}}/{{tumor}}.tumCounts.{chr}.txt", chr=CHRS)
 	output:
 		"results/phasedCounts/tumCounts/{tumor}.tumCounts.txt"
+	params:
+		mem=config["std_mem"],
+		runtime=config["std_runtime"],
+		pe=config["std_numCores"]
 	log:
 		"logs/phasedCounts/tumCounts/{tumor}/{tumor}.cat.log"
 	shell:

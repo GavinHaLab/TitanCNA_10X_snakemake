@@ -288,7 +288,7 @@ for (chr in chrsToPlot){
 	#plotHaplotypeFraction(results, chr, type = "HaplotypeRatio", colType = "titan", 
 	#  xlab="", cex=0.5, cex.axis=1.5, cex.lab=1.5)
 	#plotHaplotypeFraction(data, chr=chr, type = "HaplotypeRatio", colType = "haplotype", xlab="", ylim=c(0,1), cex=0.5, cex.axis=1.5, cex.lab=1.5)
-	maxCorCN <- segs[chr==chr, max(Corrected_Copy_Number, na.rm = TRUE)]
+	maxCorCN <- segs[Chromosome==chr, max(Corrected_Copy_Number, na.rm = TRUE)]
 	plotSegmentMedians(segs, chr=chr, resultType = "LogRatio", plotType = "CopyNumber", 
 				plot.new=TRUE, ylim=c(0,maxCorCN), xlab="", cex.axis=1.5, cex.lab=1.5, spacing=4)
 	plotClonalFrequency(results, chr, normal=norm, geneAnnot=NULL, spacing=4, 
@@ -342,9 +342,10 @@ plotClonalFrequency(dataIn=results, chr=chrs, norm, geneAnnot=genes, spacing=4, 
 dev.off()
 
 outFile <- paste0(outplot, "/", id, "_cluster", numClustersStr, "_LOH-SEG.png")
+maxCorCN <- segs[Chromosome==chr, max(Corrected_Copy_Number, na.rm = TRUE)]
 png(outFile,width=1200,height=400,res=100)
 #pdf(outFile, width=20, height=6)
-plotSegmentMedians(dataIn=segs, chr=chrs, resultType = "AllelicRatio", plotType = "CopyNumber", plot.new=T, ylim=c(0,8), cex.axis=1.5, cex.lab=1.5, cex.main=1.5)
+plotSegmentMedians(dataIn=segs, chr=chrs, resultType = "AllelicRatio", plotType = "CopyNumber", plot.new=T, ylim=c(0, maxCorCN), cex.axis=1.5, cex.lab=1.5, cex.main=1.5)
 dev.off()
 
 
