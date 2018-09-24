@@ -145,6 +145,7 @@ outImage <- gsub(".titan.txt", ".RData", outfile)
 
 ## set up chromosome naming convention ##
 seqinfo <- Seqinfo(genome=genomeBuild)
+seqlevelsStyle(seqinfo) <- genomeStyle
 seqlevelsStyle(chrs) <- genomeStyle
 
 ## set up sex for analysis
