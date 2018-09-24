@@ -263,7 +263,7 @@ if (sex == "male" || sex == "Male" || sex == "MALE" || sex == "None" || is.null(
 	chrsToPlot <- chrs
 }
 for (chr in chrsToPlot){
-	if (grep("chr", chr)){ 
+	if (grepl("chr", chr)){ 
 		chrStr <- chr 
 	}else{
 		chrStr <- paste0("chr", chr)
