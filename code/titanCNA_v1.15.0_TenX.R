@@ -36,7 +36,7 @@ option_list <- list(
 	make_option(c("--genomeBuild"), type = "character", default = "hg38", help="Genome build to use; will load Seqinfo from GenomeInfoDb."),
 	make_option(c("--chrs"), type = "character", default = "c(1:22, 'X')", help = "Chromosomes to analyze; string [Default: %default"),
 	make_option(c("--sex"), type = "character", default = "None", help = "User specified sex: male or female or None [Default: %default]"),
-	make_option(c("--cytobandFile"), type = "character", default = NULL, help = "Cytoband file should be provided only if reference genome is hg38."),
+	make_option(c("--cytobandFile"), type = "character", default = "", help = "Cytoband file should be provided only if reference genome is hg38."),
 	make_option(c("--mapWig"), type = "character", default = NULL, help = "Mappability score file for bin sizes matching cnfile. [Default: %default]"),
 	make_option(c("--mapThres"), type = "numeric", default = 0.9, help = "Minimum mappability score threshold to use; float [Default: %default]"),
 	make_option(c("--centromere"), type = "character", default=NULL, help = "Centromere gap file. [Default: %default]"),
