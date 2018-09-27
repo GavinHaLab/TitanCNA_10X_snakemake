@@ -84,7 +84,7 @@ setnames(ichor.cn, c("chr", "start", paste0(id,".copy.number"), paste0(id,".even
 ## get chromosome style
 titan$Chromosome <- as.character(titan$Chromosome)
 titan.cn$Chr <- as.character(titan.cn$Chr)
-genomeStyle <- seqlevelsStyle()[1]
+genomeStyle <- seqlevelsStyle(titan.cn$Chr)[1]
 chrs <- c(1:22, "X")
 seqlevelsStyle(chrs) <- genomeStyle
 
