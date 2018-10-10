@@ -138,10 +138,11 @@ rule copyOptSolution:
 		"logs/titan/optSolution/copyOptSolution.log"
 	shell:
 		"""
+		curDir=`pwd`
 		for i in `cut -f11 {input} | grep -v "path"`;
 		do
-			echo -e "Copying results for ${{i}} to {output}"
-			cp -r ${{i}}* {output}
+			echo -e "Creating sym links for $curDir/${{i}} to {output}"
+			ln -s ${{curDir}}/${{i}}* {output}
 		done		
 		"""
 	

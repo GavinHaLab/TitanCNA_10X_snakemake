@@ -78,7 +78,7 @@ ichor.cn <- cbind(Sample = id, ichor.cn)
 #ichor.cn[, CopyNumber := state - 1]
 ichor.cn[, Position := start]
 setnames(ichor.cn, c("chr", "start", paste0(id,".copy.number"), paste0(id,".event"), paste0(id,".logR"), "end"), 
-		c("Chr", "Start", "Copy_Number", "TITANcall", "LogRatio", "End"))
+		c("Chr", "Start", "CopyNumber", "TITANcall", "LogRatio", "End"))
 
 
 ## get chromosome style
