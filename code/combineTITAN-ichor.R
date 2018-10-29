@@ -138,7 +138,7 @@ cn[is.na(CopyNumber), CopyNumber := MajorCN + MinorCN]
 
 ## correct copy number beyond maximum CN state based on purity and logR
 correctCN <- correctIntegerCN(cn, segs, purity, ploidyT, maxCNtoCorrect.autosomes = NULL, 
-		maxCNtoCorrect.X = NULL, minPurityToCorrect = 0.2, gender = gender, chrs = chrs)
+		maxCNtoCorrect.X = NULL, minPurityToCorrect = 0.05, gender = gender, chrs = chrs)
 segs <- correctCN$segs
 cn <- correctCN$cn
 ## extend segments to remove gaps
