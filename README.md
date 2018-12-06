@@ -22,8 +22,8 @@ Website: [GavinHaLab.org](https://gavinhalab.org/)
    - stringr
    - SNPchip
    - doMC
- - Python 3.4 
-   - snakemake-3.12.0
+ - Python 3.5
+   - snakemake-5.2.0
    - PySAM-0.11.2.1
    - PyYAML-3.12
  - [bxtools](https://github.com/walaj/bxtools)

@@ -138,7 +138,7 @@ cn[is.na(CopyNumber), CopyNumber := MajorCN + MinorCN]
 
 ## correct copy number beyond maximum CN state based on purity and logR
 correctCN <- correctIntegerCN(cn, segs, purity, ploidyT, maxCNtoCorrect.autosomes = NULL, 
-		maxCNtoCorrect.X = NULL, minPurityToCorrect = 0.05, gender = gender, chrs = chrs)
+		maxCNtoCorrect.X = NULL, correctHOMD = TRUE, minPurityToCorrect = 0.05, gender = gender, chrs = chrs)
 segs <- correctCN$segs
 cn <- correctCN$cn
 ## extend segments to remove gaps
@@ -153,4 +153,15 @@ write.table(cn, file = outBinFile, col.names=T, row.names=F, quote=F, sep="\t")
 outSegNoSNPFile <- gsub(".txt", ".noSNPs.txt", outSegFile)
 write.table(segs[, -c("Start.snp", "End.snp")], file = outSegNoSNPFile, col.names=T, row.names=F, quote=F, sep="\t")
 
+## write segments in IGV / GISTIC format ##
+igv <- segs[, .(Sample, Chromosome, Start.snp, End.snp, Length.snp., logR_Copy_Number)]
+igv[Chromosome %in% chrs[1:22], Corrected.logR := log2(logR_Copy_Number / 2)]
+igv[Chromosome == chrs[grep("X", chrs)], Corrected.logR := log2(logR_Copy_Number / 1)]
+igv[, logR_Copy_Number := NULL]
+outIGVFile <- gsub("seg.txt", "segIGV.txt", outSegFile)
+write.table(igv, file = outIGVFile, col.names=T, row.names=F, quote=F, sep="\t")
+
 save.image(outImageFile)
+
+
+

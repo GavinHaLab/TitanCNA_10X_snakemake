@@ -254,7 +254,7 @@ dir.create(outplot)
 if (genomeBuild == "hg38" && file.exists(cytobandFile)){
 	cytoband <- as.data.frame(fread(cytobandFile))
 	names(cytoband) <- c("chrom", "start", "end", "name", "gieStain")
-	#cytoband$V1 <- setGenomeStyle(cytoband$V1, genomeStyle = genomeStyle)
+	cytoband$V1 <- setGenomeStyle(cytoband$V1, genomeStyle = genomeStyle)
 }
 
 if (sex == "male" || sex == "Male" || sex == "MALE" || sex == "None" || is.null(sex)){

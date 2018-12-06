@@ -60,7 +60,6 @@ library(GenomeInfoDb)
 library(data.table)
 library(HMMcopy)
 library(TitanCNA)
-library(ichorCNA)
 
 patientID <- opt$id
 tumour_file <- opt$tumorBXDir
@@ -99,7 +98,10 @@ plotFileType <- opt$plotFileType
 plotYLim <- eval(parse(text=opt$plotYLim))
 gender <- NULL
 outImage <- paste0(outDir,"/", patientID,".RData")
-
+## create output directories for each sample ##
+dir.create(paste0(outDir, "/"), recursive = TRUE)
+dir.create(paste0(outPlotDir, "/"), recursive = TRUE)
+  
 ## set genome style for chromosome names
 genomeStyle <- opt$genomeStyle
 chrs <- eval(parse(text = opt$chrs));
@@ -122,6 +124,8 @@ if (!is.null(libdirIchorCNA) && libdirIchorCNA != "None"){
 	source(paste0(libdirIchorCNA, "/R/output.R"))
 	source(paste0(libdirIchorCNA, "/R/segmentation.R"))
 	source(paste0(libdirIchorCNA, "/R/plotting.R"))
+}else{
+	library(ichorCNA)
 }
 
 ## FILTER BY EXONS IF PROVIDED ##
@@ -151,9 +155,7 @@ tumour_counts <- list()
 tumour_copy <- list()
 for (i in 1:numSamples) {
   id <- patientID
-  ## create output directories for each sample ##
-  dir.create(paste0(outDir, "/"), recursive = TRUE)
-  dir.create(paste0(outPlotDir, "/"), recursive = TRUE)
+
   ### LOAD TUMOUR AND NORMAL FILES ###
   message("Loading tumour files from ", tumour_file)
   tumour_doc <- loadBXcountsFromBEDDir(tumour_file, chrs = chrsAll, minReads = minReadsPerBX)
@@ -215,8 +217,7 @@ for (i in 1:numSamples) {
 	tumour_copy[[id]]$normal.copy <- normal_copy$copy
 	tumour_copy[[id]]$normal.BX.count <- normal_copy$reads
 	tumour_copy[[id]]$normal.BX.medianNorm <- normal_copy$BX.medianNorm
-	tumour_copy[[id]]$tumour.copy <- tumour_copy[[id]]$copy - normal_copy$copy
-	tumour_copy[[id]]$copy <- tumour_copy[[id]]$tumour.copy
+	tumour_copy[[id]]$copy <- tumour_copy[[id]]$tumour.copy - normal_copy$copy
 
 	### OUTPUT FILE ###
 	### PUTTING TOGETHER THE COLUMNS IN THE OUTPUT ###

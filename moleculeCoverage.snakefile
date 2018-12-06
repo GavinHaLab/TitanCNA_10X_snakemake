@@ -16,17 +16,8 @@ rule correctMolCov:
   	#expand("results/moleculeCoverage/{tumor}/{tumor}.seg.txt", tumor=config["pairings"]),
   	#expand("results/moleculeCoverage/{tumor}/{tumor}.params.txt", tumor=config["pairings"]),
   	expand("results/moleculeCoverage/{tumor}/{tumor}.BXcounts.txt", tumor=config["pairings"]),
-  	expand("results/bxTile/{samples}/", samples=config["samples"])
-
-rule mkdir:
-	output:
-		"results/bxTile/{samples}/"
-	params:
-		mem=config["std_mem"],
-		runtime=config["std_runtime"],
-		pe=config["std_numCores"]
-	shell:
-		"mkdir -p {output}"
+  	#expand("results/bxTile/{samples}/", samples=config["samples"])
+  	expand("results/moleculeCoverageBXmol/{tumor}/{tumor}.BXcounts.txt", tumor=config["pairings"])
 
 
 rule bxTile:
@@ -47,18 +38,22 @@ rule bxTile:
 	shell:
 		"{params.samTools} view -h -F 0x4 -q {params.mapQual} {input} {wildcards.chr} | {params.bxTools} tile - -b {params.bedFile}.{wildcards.chr}.bed > {output} 2> {log}"
 
+
 rule moleculeCoverage:
 	input:
-		#tumBed=expand("results/bxTile/{samples}/{samples}.bxTile.{chr}.bed", samples=config["samples"], chr=CHRS),
-		tumDir="results/bxTile/{tumor}/",
-		normDir=lambda wildcards: "results/bxTile/" + config["pairings"][wildcards.tumor] + "/"
+		expand("results/bxTile/{samples}/{samples}.bxTile.{chr}.bed", samples=config["samples"], chr=CHRS),
+		#tumDir="results/bxTile/{tumor}/",
+		#normDir=lambda wildcards: "results/bxTile/" + config["pairings"][wildcards.tumor] + "/"
 	output:
 		corrDepth="results/moleculeCoverage/{tumor}/{tumor}.BXcounts.txt",
 		cna="results/moleculeCoverage/{tumor}/{tumor}.cna.seg",
 		segTxt="results/moleculeCoverage/{tumor}/{tumor}.seg.txt",
 		paramTxt="results/moleculeCoverage/{tumor}/{tumor}.params.txt",
-		outDir="results/moleculeCoverage/{tumor}/",
+		#outDir="results/moleculeCoverage/{tumor}/",
 	params:
+		tumDir="results/bxTile/{tumor}/",
+		normDir=lambda wildcards: "results/bxTile/" + config["pairings"][wildcards.tumor] + "/",
+		outDir="results/moleculeCoverage/{tumor}/",
 		molCovScript=config["molCov_script"],
 		id="{tumor}",
 		minReadsPerBX=config["molCov_minReadsPerBX"],
@@ -76,4 +71,4 @@ rule moleculeCoverage:
 	log:
 		"logs/moleculeCoverage/{tumor}.molCov.log"	
 	shell:		
-		"Rscript {params.molCovScript} --id {params.id} --tumorBXDir {input.tumDir} --normalBXDir {input.normDir} --minReadsPerBX {params.minReadsPerBX} --genomeStyle {params.genomeStyle} --chrs \"{params.chrs}\" --maxCN {params.maxCN} --gcWig {params.gcwig} --libdirTitanCNA {params.titanLibDir} --libdirIchorCNA {params.ichorLibDir} --outDir {output.outDir} --centromere {params.centromere} > {log} 2> {log}"
+		"Rscript {params.molCovScript} --id {params.id} --tumorBXDir {params.tumDir} --normalBXDir {params.normDir} --minReadsPerBX {params.minReadsPerBX} --genomeStyle {params.genomeStyle} --chrs \"{params.chrs}\" --maxCN {params.maxCN} --gcWig {params.gcwig} --libdirTitanCNA {params.titanLibDir} --libdirIchorCNA {params.ichorLibDir} --outDir {params.outDir} --centromere {params.centromere} > {log} 2> {log}"
