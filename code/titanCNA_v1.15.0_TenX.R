@@ -252,9 +252,11 @@ save.image(file=outImage)
 #### PLOT RESULTS ####
 dir.create(outplot)
 if (genomeBuild == "hg38" && file.exists(cytobandFile)){
-	cytoband <- as.data.frame(fread(cytobandFile))
+	cytoband <- fread(cytobandFile)
 	names(cytoband) <- c("chrom", "start", "end", "name", "gieStain")
-	cytoband$V1 <- setGenomeStyle(cytoband$V1, genomeStyle = genomeStyle)
+	cytoband$chrom <- setGenomeStyle(cytoband$chrom, genomeStyle = genomeStyle, filterExtraChr = FALSE)
+	cytoband <- cytoband[chrom %in% chrs]
+	cytoband <- as.data.frame(cytoband)
 }
 
 if (sex == "male" || sex == "Male" || sex == "MALE" || sex == "None" || is.null(sex)){
