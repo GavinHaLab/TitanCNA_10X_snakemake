@@ -6,9 +6,9 @@ bxTools:  /path/to/bxtools ## need to specify
 molCov_script:  code/getMoleculeCoverage.R
 phaseCounts_hetSites_script:  code/getPhasedHETSitesFromLLRVCF.R
 phaseCounts_counts_script:  code/getTumourAlleleCountsAtHETSites.py
-TitanCNA_rscript: code/titanCNA_v1.15.0_TenX.R
+TitanCNA_rscript: code/titanCNA_v1.21.0_TenX.R
 TitanCNA_selectSolutionRscript: code/selectSolution.R
-TitanCNA_combineTitanIchorCNA:  code/combineTITAN-ichor.R
+TitanCNA_combineTitanIchorCNA:  code/combineTITAN-ichor_v2.R
 TitanCNA_libdir:  /path/to/TitanCNA/ ## optional
 ichorCNA_libdir:  /path/to/ichorCNA/ ## optional
 
@@ -67,13 +67,11 @@ TitanCNA_estimatePloidy:  TRUE
 TitanCNA_estimateClonality: TRUE
 TitanCNA_alphaK:  10000
 TitanCNA_alphaR:  5000
-TitanCNA_txnExpLen: 1e15
+TitanCNA_txnExpLen: 1e20
 TitanCNA_plotYlim:  c(-2,4)
 TitanCNA_solutionThreshold: 0.05
 TitanCNA_numCores:  1
 TitanCNA_mem:  16G
 TitanCNA_runtime:  "300:00:00"
 TitanCNA_pe: -pe smp 1 -binding linear:1  
-
-
 

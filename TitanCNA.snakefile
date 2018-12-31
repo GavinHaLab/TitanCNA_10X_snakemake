@@ -1,7 +1,7 @@
 configfile: "config/config.yaml"
 configfile: "config/samples.yaml"
 
-include: "moleculeCoverage.snakefile"
+#include: "moleculeCoverage.snakefile"
 include: "getPhasedAlleleCounts.snakefile"
 import os.path
 
@@ -59,6 +59,7 @@ rule runTitanCNA:
 		haplotypeBinSize=config["TitanCNA_haplotypeBinSize"],
 		alphaK=config["TitanCNA_alphaK"],
 		alphaR=config["TitanCNA_alphaR"],
+		diploidStrength=config["TitanCNA_diploidStrength"],
 		#alleleModel=config["TitanCNA_alleleModel"],
 		txnExpLen=config["TitanCNA_txnExpLen"],
 		plotYlim=config["TitanCNA_plotYlim"],
@@ -68,7 +69,7 @@ rule runTitanCNA:
 	log:
 		"logs/titan/titanCNA_ploidy{ploidy}/{tumor}_cluster{clustNum}.log"
 	shell:
-		"Rscript {params.titanRscript} --id {wildcards.tumor} --hetFile {input.alleleCounts} --cnFile {input.corrDepth} --ichorParam {input.ichorParam} --numClusters {wildcards.clustNum} --numCores {params.numCores} --normal_0 {params.normal} --ploidy_0 {wildcards.ploidy} --chrs \"{params.chrs}\" --maxCN {params.maxCN} --sex {params.sex} --haplotypeBinSize {params.haplotypeBinSize} --estimateNormal {params.estimateNormal} --estimatePloidy {params.estimatePloidy} --estimateClonality {params.estimateClonality}  --centromere {params.centromere} --genomeBuild {params.genomeBuild} --genomeStyle {params.genomeStyle} --libdir {params.libdir} --alphaK {params.alphaK} --alphaR {params.alphaR} --alleleModel Gaussian --txnExpLen {params.txnExpLen} --plotYlim \"{params.plotYlim}\" --cytobandFile {params.cytobandFile} --outFile {output.titan} --outSeg {output.segTxt} --outParam {output.param} --outIGV {output.seg} --outPlotDir {params.outRoot} > {log} 2> {log}"
+		"Rscript {params.titanRscript} --id {wildcards.tumor} --hetFile {input.alleleCounts} --cnFile {input.corrDepth} --ichorParam {input.ichorParam} --numClusters {wildcards.clustNum} --numCores {params.numCores} --normal_0 {params.normal} --ploidy_0 {wildcards.ploidy} --chrs \"{params.chrs}\" --maxCN {params.maxCN} --sex {params.sex} --haplotypeBinSize {params.haplotypeBinSize} --estimateNormal {params.estimateNormal} --estimatePloidy {params.estimatePloidy} --estimateClonality {params.estimateClonality}  --centromere {params.centromere} --genomeBuild {params.genomeBuild} --genomeStyle {params.genomeStyle} --libdir {params.libdir} --alphaK {params.alphaK} --alphaR {params.alphaR} --diploidStrength {params.diploidStrength} --alleleModel Gaussian --txnExpLen {params.txnExpLen} --plotYlim \"{params.plotYlim}\" --cytobandFile {params.cytobandFile} --outFile {output.titan} --outSeg {output.segTxt} --outParam {output.param} --outIGV {output.seg} --outPlotDir {params.outRoot} > {log} 2> {log}"
 	
 				
 rule combineTitanAndIchorCNA:
