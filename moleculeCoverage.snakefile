@@ -12,12 +12,23 @@ def getLRFullPath(base, filename):
 rule correctMolCov:
   input: 
   	expand("results/bxTile/{samples}/{samples}.bxTile.{chr}.bed", samples=config["samples"], chr=CHRS),
+  	#expand("results/bxMol/{samples}/{samples}.bxMol.{chr}.bed", samples=config["samples"], chr=CHRS),
   	#expand("results/moleculeCoverage/{tumor}/{tumor}.cna.seg", tumor=config["pairings"]),
   	#expand("results/moleculeCoverage/{tumor}/{tumor}.seg.txt", tumor=config["pairings"]),
   	#expand("results/moleculeCoverage/{tumor}/{tumor}.params.txt", tumor=config["pairings"]),
   	expand("results/moleculeCoverage/{tumor}/{tumor}.BXcounts.txt", tumor=config["pairings"]),
   	#expand("results/bxTile/{samples}/", samples=config["samples"])
-  	expand("results/moleculeCoverageBXmol/{tumor}/{tumor}.BXcounts.txt", tumor=config["pairings"])
+  	#expand("results/moleculeCoverageBXmol/{tumor}/{tumor}.BXcounts.txt", tumor=config["pairings"])
+
+# rule mkdir:
+# 	output:
+# 		directory("results/bxTile/{samples}/")
+# 	params:
+# 		mem=config["std_mem"],
+# 		runtime=config["std_runtime"],
+# 		pe=config["std_numCores"]
+# 	shell:
+# 		"mkdir -p {output}"
 
 
 rule bxTile:

@@ -1,7 +1,7 @@
 configfile: "config/config.yaml"
 configfile: "config/samples.yaml"
 
-#include: "moleculeCoverage.snakefile"
+include: "moleculeCoverage.snakefile"
 include: "getPhasedAlleleCounts.snakefile"
 import os.path
 

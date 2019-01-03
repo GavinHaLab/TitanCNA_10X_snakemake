@@ -180,9 +180,13 @@ if (length(ind.segs.remove) > 0){
 #ind.homd.panel <- queryHits(hits)
 #ind.homd.all <- union(ind.homd.panel, ind.homd.segs)
 # remove the elements 
-cn <- cn[-ind.homd.segs]
+if (length(ind.homd.segs) > 0){
+	cn <- cn[-ind.homd.segs]
+}
 #cn <- cn[ind.homd.segs, FILTER := "EXCLUDE"]
-segs <- segs[-ind.segs.remove]
+if (length(ind.segs.remove) > 0){
+	segs <- segs[-ind.segs.remove]
+}
 #segs <- segs[ind.segs.remove, FILTER := "EXCLUDE"]
 
 ## correct copy number beyond maximum CN state based on purity and logR
