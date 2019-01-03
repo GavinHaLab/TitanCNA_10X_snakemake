@@ -69,11 +69,10 @@ snakemake -s TitanCNA.snakefile -np
 snakemake -s TitanCNA.snakefile --cores 5
 ```
 ## 2. Invoking the TITAN snakemake workflow on a cluster
-If you are using a cluster, then these are resource settings for memory and runtime limits, and parallel environments.  
-These are the default settings for all tasks that do not have rule-specific resources.  
+Here are instructions for running workflow on a cluster using specific resource settings for memory and runtime limits, and parallel environments.  
 There are two cluster configurations provided: `qsub` and `slurm`
 
-#### i. `qsub`
+#### a. `qsub`
 There are 2 separate files in use for `qsub`, which are provided as a template:
 	`config/cluster_qsub.sh` - This file contains other `qsub` parameters. *Note that these settings are used for the Broad's UGER cluster so users will need to modify this for their own clusters.*  
 	`config/cluster_qsub.yaml` - This file contains the memory, runtime, and number of cores for certain tasks.  
@@ -84,7 +83,7 @@ snakemake -s  TitanCNA.snakefile --jobscript config/cluster_qsub.sh --cluster-co
 ```
 Here, the `h_vmem` (max memory), `h_rt` (max runtime) are used. For `runTitanCNA` task, the default setting is to use 1 core but additional number of cpus (per task) can help to speed up the analysis. This can be set with `-pe` and `-binding`. Your SGE settings may be different and users should adjust accordingly.
 
-#### ii. `slurm`
+#### b. `slurm`
 There is only one file in use for `slurm`:
 	`config/cluster_slurm.yaml` - This file contains the memory, runtime, and number of cores for certain tasks. 
 To invoke the snakemake pipeline for `qsub`:
@@ -104,17 +103,21 @@ Users can run the snakemake files individually. This can be helpful for testing 
   snakemake -s moleculeCoverage.snakefile --cores 5
   # OR
   snakemake -s  moleculeCoverage.snakefile --cluster-config config/cluster_slurm.yaml --cluster "sbatch -p {cluster.partition} --mem={cluster.mem} -t {cluster.time} -c {cluster.ncpus} -n {cluster.ntasks} -o {cluster.output}" -j 50
+  # OR
+  snakemake -s moleculeCoverage.snakefile --jobscript config/cluster_qsub.sh --cluster-config config/cluster_qsub.yaml --cluster-sync "qsub -l h_vmem={cluster.h_vmem},h_rt={cluster.h_rt} -pe {cluster.pe} -binding {cluster.binding}" -j 100
   ```
   
   ### b. [getPhasedAlleleCounts.snakefile](getPhasedAlleleCounts.snakefile) 
-  i.   Read the Long Ranger output file `phased_variants.vcf.gz` and extract heterozygous SNP sites (that overlap a SNP database, e.g. [hapmap_3.3.hg38.vcf.gz](https://storage.cloud.google.com/genomics-public-data/resources/broad/hg38/v0/hapmap_3.3.hg38.vcf.gz?_ga=2.110868357.-1633399588.1531762721)).
-  i.   Extract the allelic read counts from the Long Ranger tumor bam file `phased_possorted_bam.bam` for each chromosome.  
+  i.   Read the Long Ranger output file `phased_variants.vcf.gz` and extract heterozygous SNP sites (that overlap a SNP database, e.g. [hapmap_3.3.hg38.vcf.gz](https://storage.cloud.google.com/genomics-public-data/resources/broad/hg38/v0/hapmap_3.3.hg38.vcf.gz?_ga=2.110868357.-1633399588.1531762721)).  
+  ii.   Extract the allelic read counts from the Long Ranger tumor bam file `phased_possorted_bam.bam` for each chromosome.  
   iii. Cat the allelic read counts from each chromosome file into a single counts file.
   ```
   snakemake -s getPhasedAlleleCounts.snakefile -np
   snakemake -s getPhasedAlleleCounts.snakefile --cores 5
   # OR
-   snakemake -s  getPhasedAlleleCounts.snakefile --cluster-config config/cluster_slurm.yaml --cluster "sbatch -p {cluster.partition} --mem={cluster.mem} -t {cluster.time} -c {cluster.ncpus} -n {cluster.ntasks} -o {cluster.output}" -j 50
+   snakemake -s getPhasedAlleleCounts.snakefile --cluster-config config/cluster_slurm.yaml --cluster "sbatch -p {cluster.partition} --mem={cluster.mem} -t {cluster.time} -c {cluster.ncpus} -n {cluster.ntasks} -o {cluster.output}" -j 50
+   # OR
+   snakemake -s getPhasedAlleleCounts.snakefile --jobscript config/cluster_qsub.sh --cluster-config config/cluster_qsub.yaml --cluster-sync "qsub -l h_vmem={cluster.h_vmem},h_rt={cluster.h_rt} -pe {cluster.pe} -binding {cluster.binding}" -j 100
   ``` 
   ### c. [TitanCNA.snakefile](TitanCNA.snakefile)
   i.   Run the [TitanCNA](https://github.com/gavinha/TitanCNA) analysis and generates solutions for different ploidy initializations and each clonal cluster.  
