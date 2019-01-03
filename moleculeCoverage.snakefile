@@ -40,10 +40,7 @@ rule bxTile:
 		bxTools=config["bxTools"],
 		samTools=config["samTools"],
 		mapQual=config["bx_mapQual"],
-		bedFile=config["bx_bedFileRoot"],
-		mem=config["std_mem"],
-		runtime=config["std_runtime"],
-		pe=config["std_numCores"]
+		bedFile=config["bx_bedFileRoot"]
 	log:
 		"logs/bxTile/{samples}/{samples}.bxTile.{chr}.log"
 	shell:
@@ -75,10 +72,7 @@ rule moleculeCoverage:
 		mapwig=config["molCov_mapWig"],
 		titanLibDir=config["TitanCNA_libdir"],
 		ichorLibDir=config["ichorCNA_libdir"],
-		centromere=config["centromere"],
-		mem=config["std_mem"],
-		runtime=config["std_runtime"],
-		pe=config["std_numCores"]
+		centromere=config["centromere"]
 	log:
 		"logs/moleculeCoverage/{tumor}.molCov.log"	
 	shell:		

@@ -25,10 +25,7 @@ rule getHETsites:
 		minQual=config["het_minVCFQuality"],
 		minDepth=config["het_minDepth"],
 		minVAF=config["het_minVAF"],
-		libdir=config["TitanCNA_libdir"],
-		mem=config["het_mem"],
-		runtime=config["het_runtime"],
-		pe=config["std_numCores"]
+		libdir=config["TitanCNA_libdir"]
 	log:
 		"logs/phasedCounts/hetPosns/{tumor}.phasedHETsites.log"
 	shell:
@@ -45,10 +42,7 @@ rule getAlleleCountsByChr:
 		countScript=config["phaseCounts_counts_script"],
 		mapQ=config["het_minMapQuality"],
 		baseQ=config["het_minBaseQuality"],
-		vcfQ=config["het_minVCFQuality"],
-		mem=config["std_mem"],
-		runtime=config["std_runtime"],
-		pe=config["std_numCores"]
+		vcfQ=config["het_minVCFQuality"]
 	log:
 		"logs/phasedCounts/tumCounts/{tumor}/{tumor}.tumCounts.{chr}.log"
 	shell:
@@ -60,9 +54,6 @@ rule catAlleleCountFiles:
 	output:
 		"results/phasedCounts/tumCounts/{tumor}.tumCounts.txt"
 	params:
-		mem=config["std_mem"],
-		runtime=config["std_runtime"],
-		pe=config["std_numCores"]
 	log:
 		"logs/phasedCounts/tumCounts/{tumor}/{tumor}.cat.log"
 	shell:

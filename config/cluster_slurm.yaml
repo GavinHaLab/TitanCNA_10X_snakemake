@@ -1,0 +1,21 @@
+__default__:
+    partition:  campus # users specified
+    mem:    4G
+    time:   1:0:0
+    ncpus:  1
+    ntasks: 1
+    output: logs/cluster/{rule}.%A.out
+
+getHETsites:
+    time:   15:0:0
+    mem:    20G
+    
+ichorCNA:
+    time:   300:0:0
+    mem:    10G
+
+runTitanCNA:
+    time:   300:0:0
+    mem:    16G
+    ncpus:  1
+
