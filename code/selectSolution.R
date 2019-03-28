@@ -30,7 +30,7 @@ outFile <- opt$outFile
 
 
 homd.snp.thres <- 1500
-homd.snp.prop <- 0.02
+homd.snp.prop <- 0.01
 
 phi2Files <- list.files(phi2Dir, pattern="params.txt", full.names=T)
 if (!is.null(phi3Dir) && phi3Dir != "NULL"){
@@ -79,12 +79,12 @@ getParamAllClusters <- function(phiSamples, phiStr = "2"){
 	  colnames(phi) <- gsub(".params.txt", "", basename(phiSamples[j]))	
 	  param.df <- data.frame(formatParams(phi), stringsAsFactors=F)  
 	  phisegs <- fread(gsub(".params.txt", ".segs.txt", phiSamples[j]))
-	  stateDist <- phisegs[, sum(Length.snp.), by = TITAN_call]
+	  stateDist <- phisegs[, sum(Length.snp.), by = Corrected_Copy_Number]
 	  # HOMD total proportion greater than homd.snp.prop
-	  if ("HOMD" %in% stateDist$TITAN_call){
-		  ind <- stateDist[TITAN_call == "HOMD", V1] / sum(stateDist[, V1]) > homd.snp.prop
+	  if (0 %in% stateDist$Corrected_Copy_Number){
+		  ind <- stateDist[Corrected_Copy_Number == 0, V1] / sum(stateDist[, V1]) > homd.snp.prop
 		  # HOMD seg larger than homd.snp.thres
-		  ind <- ind | sum(phisegs[TITAN_call == "HOMD", Length.snp.] > homd.snp.thres) > 0
+		  ind <- ind | sum(phisegs[Corrected_Copy_Number == 0, Length.snp.] > homd.snp.thres) > 0
 		  if (ind){
 			param.df[, "loglik"] <- -Inf
 			param.df[, "sdbw"] <- Inf
@@ -103,18 +103,18 @@ getParamAllClusters <- function(phiSamples, phiStr = "2"){
 #optSolution <- matrix(NA, ncol = 9, nrow = numSamples, dimnames = list(c(), c("SampleID_cluster", "SampleID_Barcode", "NumClonalClusters", "CellularPrevalence", "Purity", "NormalContam", "Ploidy", "LogLik", "Selected.Solution")))
 #outLink <- paste0(basename(outDir), ".sh")
 #fc <- file(outLink, "w+")
-optSolutionAll <- NULL
+optSolutionAll <- data.table()
 for (i in 1:numPatients){
   id <- patients[i]
-	phi2Samples <- grep(id, phi2Files, value=T)
-	if (length(phi2Samples) > 0){
-	  phi2Params <- getParamAllClusters(phi2Samples, "2")
-	}
+  phi2Samples <- grep(paste0(id, "_cluster"), phi2Files, value=T)
+  if (length(phi2Samples) > 0){
+    phi2Params <- getParamAllClusters(phi2Samples, "2")
+  }
 	
   phi3Params <- NULL
   phi3Params$loglik <- NA
   if (!is.null(phi3Files)){
-    phi3Samples <- grep(id, phi3Files, value=T)	
+    phi3Samples <- grep(paste0(id, "_cluster"), phi3Files, value=T)	
     if (length(phi3Samples) > 0){
       phi3Params <- getParamAllClusters(phi3Samples, "3")
     }
@@ -123,7 +123,7 @@ for (i in 1:numPatients){
 	phi4Params <- NULL
 	phi4Params$loglik <- NA
   if (!is.null(phi4Files)){
-    phi4Samples <- grep(id, phi4Files, value=T)
+    phi4Samples <- grep(paste0(id, "_cluster"), phi4Files, value=T)
     if (length(phi4Samples) > 0){
 	    phi4Params <- getParamAllClusters(phi4Samples, "4")
     }
@@ -136,12 +136,8 @@ for (i in 1:numPatients){
   optSolution <- optPloidy[which.min(optPloidy$sdbw), ]
   optSolutionAll <- rbind(optSolutionAll, optSolution)
   
-  #lnCmd <- paste0("cp -r ", optSolution$path, "* ", outDir, "/")
-  ## apply link command ##
-  #write.table(lnCmd, file = fc, col.names=F, row.names=F, quote=F, sep="\t", append=T)
 }
-#outFile <- paste0(basename(outDir), ".txt")
 write.table(optSolutionAll, file = outFile, col.names = T, row.names = F, quote = F, sep = "\t")
-#close(fc)
+
 
 
