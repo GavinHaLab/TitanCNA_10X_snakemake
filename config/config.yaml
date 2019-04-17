@@ -68,10 +68,10 @@ TitanCNA_estimateClonality: TRUE
 TitanCNA_alphaK:  10000
 TitanCNA_alphaR:  5000
 TitanCNA_txnExpLen: 1e20
+TitanCNA_diploidStrength: 0
 TitanCNA_plotYlim:  c(-2,4)
 TitanCNA_solutionThreshold: 0.05
 TitanCNA_numCores:  1
 TitanCNA_mem:  16G
 TitanCNA_runtime:  "300:00:00"
 TitanCNA_pe: -pe smp 1 -binding linear:1  
-
