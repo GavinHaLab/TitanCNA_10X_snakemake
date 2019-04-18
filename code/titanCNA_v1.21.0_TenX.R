@@ -144,7 +144,12 @@ if (is.null(outplot)){
 outImage <- gsub(".titan.txt", ".RData", outfile)
 
 ## set up chromosome naming convention ##
-seqinfo <- Seqinfo(genome=genomeBuild)
+bsg <- paste0("BSgenome.Hsapiens.UCSC.", genomeBuild)
+if (!require(bsg, character.only=TRUE, quietly=TRUE, warn.conflicts=FALSE)) {
+	seqinfo <- Seqinfo(genome=genomeBuild)
+} else {
+	seqinfo <- seqinfo(get(bsg))
+}
 seqlevelsStyle(seqinfo) <- genomeStyle
 seqlevelsStyle(chrs) <- genomeStyle
 
