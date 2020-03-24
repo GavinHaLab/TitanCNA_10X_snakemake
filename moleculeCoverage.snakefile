@@ -70,10 +70,11 @@ rule moleculeCoverage:
 		maxCN=config["molCov_maxCN"],
 		gcwig=config["molCov_gcWig"],
 		mapwig=config["molCov_mapWig"],
+		reptimewig=config["molCov_repTimeWig"],
 		titanLibDir=config["TitanCNA_libdir"],
 		ichorLibDir=config["ichorCNA_libdir"],
 		centromere=config["centromere"]
 	log:
 		"logs/moleculeCoverage/{tumor}.molCov.log"	
 	shell:		
-		"Rscript {params.molCovScript} --id {params.id} --tumorBXDir {params.tumDir} --normalBXDir {params.normDir} --minReadsPerBX {params.minReadsPerBX} --genomeStyle {params.genomeStyle} --chrs \"{params.chrs}\" --maxCN {params.maxCN} --gcWig {params.gcwig} --libdirTitanCNA {params.titanLibDir} --libdirIchorCNA {params.ichorLibDir} --outDir {params.outDir} --centromere {params.centromere} > {log} 2> {log}"
+		"Rscript {params.molCovScript} --id {params.id} --tumorBXDir {params.tumDir} --normalBXDir {params.normDir} --minReadsPerBX {params.minReadsPerBX} --genomeStyle {params.genomeStyle} --chrs \"{params.chrs}\" --maxCN {params.maxCN} --gcWig {params.gcwig} --repTimeWig {params.reptimewig} --libdirTitanCNA {params.titanLibDir} --libdirIchorCNA {params.ichorLibDir} --outDir {params.outDir} --centromere {params.centromere} > {log} 2> {log}"

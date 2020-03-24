@@ -42,6 +42,7 @@ molCov_minReadsPerBX:  2
 molCov_chrs:  c(1:22, \"X\")
 molCov_gcWig: data/gc_hg38_10kb.wig
 molCov_mapWig:  data/map_hg38_10kb.wig
+molCov_repTimeWig: None
 molCov_maxCN:  8
 
 ## get HET sites from LongRanger phased variant VCF ##
