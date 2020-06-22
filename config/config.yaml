@@ -44,6 +44,7 @@ molCov_gcWig: data/gc_hg38_10kb.wig
 molCov_mapWig:  data/map_hg38_10kb.wig
 molCov_repTimeWig: None
 molCov_maxCN:  8
+molCov_likModel: t
 
 ## get HET sites from LongRanger phased variant VCF ##
 het_minVCFQuality:  100
