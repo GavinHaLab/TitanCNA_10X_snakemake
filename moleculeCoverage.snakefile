@@ -17,6 +17,7 @@ rule correctMolCov:
   	#expand("results/moleculeCoverage/{tumor}/{tumor}.seg.txt", tumor=config["pairings"]),
   	#expand("results/moleculeCoverage/{tumor}/{tumor}.params.txt", tumor=config["pairings"]),
   	expand("results/moleculeCoverage/{tumor}/{tumor}.BXcounts.txt", tumor=config["pairings"]),
+  	expand("results/moleculeCoverage/{tumor}/{tumor}.cna.seg", tumor=config["pairings"])
   	#expand("results/bxTile/{samples}/", samples=config["samples"])
   	#expand("results/moleculeCoverageBXmol/{tumor}/{tumor}.BXcounts.txt", tumor=config["pairings"])
 
@@ -68,6 +69,7 @@ rule moleculeCoverage:
 		genomeStyle=config["genomeStyle"],
 		chrs=config["molCov_chrs"],
 		maxCN=config["molCov_maxCN"],
+		likModel=config["molCov_likModel"],
 		gcwig=config["molCov_gcWig"],
 		mapwig=config["molCov_mapWig"],
 		reptimewig=config["molCov_repTimeWig"],
@@ -77,4 +79,4 @@ rule moleculeCoverage:
 	log:
 		"logs/moleculeCoverage/{tumor}.molCov.log"	
 	shell:		
-		"Rscript {params.molCovScript} --id {params.id} --tumorBXDir {params.tumDir} --normalBXDir {params.normDir} --minReadsPerBX {params.minReadsPerBX} --genomeStyle {params.genomeStyle} --chrs \"{params.chrs}\" --maxCN {params.maxCN} --gcWig {params.gcwig} --repTimeWig {params.reptimewig} --libdirTitanCNA {params.titanLibDir} --libdirIchorCNA {params.ichorLibDir} --outDir {params.outDir} --centromere {params.centromere} > {log} 2> {log}"
+		"Rscript {params.molCovScript} --id {params.id} --tumorBXDir {params.tumDir} --normalBXDir {params.normDir} --minReadsPerBX {params.minReadsPerBX} --genomeStyle {params.genomeStyle} --chrs \"{params.chrs}\" --maxCN {params.maxCN} --likModel {params.likModel} --gcWig {params.gcwig} --mapWig {params.mapwig} --repTimeWig {params.reptimewig} --libdirTitanCNA {params.titanLibDir} --libdirIchorCNA {params.ichorLibDir} --outDir {params.outDir} --centromere {params.centromere} > {log} 2> {log}"

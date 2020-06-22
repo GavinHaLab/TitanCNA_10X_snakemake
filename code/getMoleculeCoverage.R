@@ -64,6 +64,8 @@ library(GenomicRanges)
 library(data.table)
 library(HMMcopy)
 library(TitanCNA)
+library(foreach)
+library(doMC)
 
 patientID <- opt$id
 tumour_file <- opt$tumorBXDir
@@ -172,6 +174,10 @@ if (is.null(map)){
 repTime <- wigToGRanges(repTimeWig)
 if (is.null(repTime)){
   message("No replication timing wig file input, excluding from correction")
+}else{
+  if (mean(repTime$value, na.rm = TRUE) > 1){
+    repTime$value <- repTime$value / 100 ## want values in [0,1] - for LNCaP_repTime_10kb_hg38.txt
+  }
 }
 
 ## LOAD IN WIG FILES ##
@@ -236,7 +242,7 @@ for (i in 1:numSamples) {
 	### OUTPUT FILE ###
 	### PUTTING TOGETHER THE COLUMNS IN THE OUTPUT ###
 	outMat <- as.data.frame(tumour_copy[[id]])
-	outMat <- outMat[, c("space","start","end","tumour.copy")]
+	outMat <- outMat[, c("seqnames","start","end","tumour.copy")]
 	colnames(outMat)[1:3] <- c("chr","start","end")
 	outFile <- paste0(outDir,"/",id,".BXcounts.txt")
 	message(paste("Outputting to:", outFile))
@@ -286,7 +292,7 @@ for (n in normal){
     ############################################
   	K <- length(param$ct)
   	logR.var <- 1 / ((apply(logR, 2, sd, na.rm = TRUE) / sqrt(length(param$ct))) ^ 2)
-	param$lambda <- rep(logR.var, length(param$ct))
+	param$lambda <- matrix(logR.var, length(param$ct))
 	param$lambda[param$ct >= 4] <- logR.var
 	param$lambda[param$ct == max(param$ct)] <- logR.var / 10
 	param$lambda[param$ct %in% c(1,2,3)] <- logR.var
@@ -304,6 +310,16 @@ for (n in normal){
 			iter <- hmmResults.cor$results$iter
 			id <- names(hmmResults.cor$cna)[s]
 	
+      ## correct integer copy number based on estimated purity and ploidy
+      correctedResults <- correctIntegerCN(cn = hmmResults.cor$cna[[s]],
+            segs = hmmResults.cor$results$segs[[s]],
+            purity = 1 - hmmResults.cor$results$n[s, iter], ploidy = hmmResults.cor$results$phi[s, iter],
+            cellPrev = 1 - hmmResults.cor$results$sp[s, iter],
+            maxCNtoCorrect.autosomes = maxCN, maxCNtoCorrect.X = maxCN, minPurityToCorrect = 0.03,
+            gender = gender$gender, chrs = chrs, correctHOMD = includeHOMD)
+      hmmResults.cor$results$segs[[s]] <- correctedResults$segs
+      hmmResults.cor$cna[[s]] <- correctedResults$cn
+
 			## convert full diploid solution (of chrs to train) to have 1.0 normal or 0.0 purity
 			## check if there is an altered segment that has at least a minimum # of bins
 			segsS <- hmmResults.cor$results$segs[[s]]
